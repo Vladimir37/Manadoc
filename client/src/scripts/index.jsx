@@ -7,8 +7,7 @@ import {NotFound} from './app/pages/404.jsx';
 
 ReactDOM.render(
     <Router history={browserHistory}>
-        <Route path='/' component={Main}/>
-        <Route path='*' component={NotFound}/>
+        <Route path='*' component={Main}/>
     </Router>,
     document.getElementById('root')
 );

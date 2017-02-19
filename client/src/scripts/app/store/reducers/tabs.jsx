@@ -9,7 +9,7 @@ export default function tabReducer(state, action) {
 
 function generateTab(state, action) {
     let newTab = {
-        ID: 0,
+        ID: state.tabs.tabsList[state.tabs.tabsList.length - 1].ID + 1,
         type: action.detail.type,
         addr: action.detail.addr,
         title: action.detail.title,

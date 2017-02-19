@@ -2,7 +2,7 @@ import {createStore} from 'redux';
 import tabReducer from './reducers/tabs.jsx';
 
 let mainTab = {
-    ID: 0,
+    ID: 1,
     type: 'main',
     addr: null,
     title: 'Main',

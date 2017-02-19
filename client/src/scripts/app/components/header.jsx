@@ -1,11 +1,15 @@
 import * as React from 'react';
-import {Tabs} from './tabs.jsx';
+import {Provider} from 'react-redux';
+import Tabs from './tabs.jsx';
+import {store} from '../store/store.jsx';
 
 export class Header extends React.Component {
     render() {
         return (
             <header>
-                <Tabs/>
+                <Provider store={store}>
+                    <Tabs/>
+                </Provider>
                 <h1>Main title</h1>
             </header>
         );

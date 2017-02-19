@@ -1,19 +1,24 @@
 import * as React from 'react';
+import {connect} from 'react-redux';
 import {Nav, NavItem} from 'react-bootstrap';
-import {store} from '../store/store.jsx';
 
-export class Tabs extends React.Component {
+class TabsComponent extends React.Component {
     render() {
-        console.log(store);
-        console.log(store.getState());
-        let tabs = store.getState().tabs.tabsList;
-        let tabsHTML = tabs.map((tab, index) => {
-            return <NavItem key={{index}}>{tab.title}</NavItem>
-        })
+        let tabs = this.props.tabs.map((tab) => {
+            return <NavItem key={tab.ID} eventKey={tab.ID}>{tab.title}</NavItem>;
+        });
         return (
-            <Nav bsStyle="tabs" activeKey="0">
-                {tabsHTML}
+            <Nav bsStyle="tabs" activeKey="1">
+                {tabs}
             </Nav>
         );
     }
 }
+
+function ConnectTabs(state) {
+    return {
+        tabs: state.tabs.tabsList
+    };
+}
+
+export default connect(ConnectTabs)(TabsComponent); 
