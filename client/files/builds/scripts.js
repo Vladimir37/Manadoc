@@ -58,8 +58,6 @@
 
 	var _main = __webpack_require__(241);
 
-	var _ = __webpack_require__(540);
-
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 	ReactDOM.render(React.createElement(
@@ -27181,6 +27179,10 @@
 
 	var _panel2 = _interopRequireDefault(_panel);
 
+	var _worktop = __webpack_require__(540);
+
+	var _worktop2 = _interopRequireDefault(_worktop);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
@@ -27217,7 +27219,11 @@
 	                    { store: _store.store },
 	                    React.createElement(_panel2.default, null)
 	                ),
-	                this.generatePage()
+	                React.createElement(
+	                    _reactRedux.Provider,
+	                    { store: _store.store },
+	                    React.createElement(_worktop2.default, null)
+	                )
 	            );
 	        }
 	    }]);
@@ -28879,7 +28885,7 @@
 
 	var mainTab = {
 	    ID: 1,
-	    type: 'main',
+	    type: 'main1',
 	    addr: null,
 	    title: 'Main',
 	    focus: 0
@@ -28990,11 +28996,6 @@
 	                    _reactRedux.Provider,
 	                    { store: _store.store },
 	                    React.createElement(_tabs2.default, null)
-	                ),
-	                React.createElement(
-	                    'h1',
-	                    null,
-	                    'Main title'
 	                )
 	            );
 	        }
@@ -48382,6 +48383,8 @@
 
 	var _reactRedux = __webpack_require__(242);
 
+	var _reactBootstrap = __webpack_require__(274);
+
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -48402,20 +48405,25 @@
 	    _createClass(PanelComponent, [{
 	        key: 'render',
 	        value: function render() {
-	            return React.createElement('div', { className: 'side-panel' });
+	            var panelElement = null;
+	            if (this.props.tabs[this.props.activeTab].type != 'main') {
+	                panelElement = React.createElement(_reactBootstrap.Jumbotron, { className: 'side-panel' });
+	            }
+	            return panelElement;
 	        }
 	    }]);
 
 	    return PanelComponent;
 	}(React.Component);
 
-	function ConnectPanels(state) {
+	function ConnectPanel(state) {
 	    return {
-	        tabs: state.tabs.tabsList
+	        tabs: state.tabs.tabsList,
+	        activeTab: state.tabs.activeTab
 	    };
 	}
 
-	exports.default = (0, _reactRedux.connect)(ConnectPanels)(PanelComponent);
+	exports.default = (0, _reactRedux.connect)(ConnectPanel)(PanelComponent);
 
 /***/ },
 /* 540 */
@@ -48426,7 +48434,6 @@
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
-	exports.NotFound = undefined;
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -48434,9 +48441,9 @@
 
 	var React = _interopRequireWildcard(_react);
 
-	var _header = __webpack_require__(272);
+	var _reactRedux = __webpack_require__(242);
 
-	var _footer = __webpack_require__(541);
+	var _reactBootstrap = __webpack_require__(274);
 
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -48446,99 +48453,64 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var NotFound = exports.NotFound = function (_React$Component) {
-	    _inherits(NotFound, _React$Component);
+	var WorktopComponent = function (_React$Component) {
+	    _inherits(WorktopComponent, _React$Component);
 
-	    function NotFound() {
-	        _classCallCheck(this, NotFound);
+	    function WorktopComponent(props) {
+	        _classCallCheck(this, WorktopComponent);
 
-	        return _possibleConstructorReturn(this, (NotFound.__proto__ || Object.getPrototypeOf(NotFound)).apply(this, arguments));
+	        var _this = _possibleConstructorReturn(this, (WorktopComponent.__proto__ || Object.getPrototypeOf(WorktopComponent)).call(this, props));
+
+	        _this.state = {
+	            windowWidth: window.innerWidth
+	        };
+
+	        _this.updateWindowWidth = _this.updateWindowWidth.bind(_this);
+	        return _this;
 	    }
 
-	    _createClass(NotFound, [{
-	        key: 'generatePage',
-	        value: function generatePage() {
-	            return React.createElement(
-	                'main',
-	                null,
-	                React.createElement(
-	                    'h1',
-	                    null,
-	                    'Error 404'
-	                ),
-	                React.createElement(
-	                    'h2',
-	                    null,
-	                    'Page not found'
-	                )
-	            );
+	    _createClass(WorktopComponent, [{
+	        key: 'componentDidMount',
+	        value: function componentDidMount() {
+	            window.addEventListener('resize', this.updateWindowWidth);
+	        }
+	    }, {
+	        key: 'componentWillUnmount',
+	        value: function componentWillUnmount() {
+	            window.removeEventListener('resize', this.updateWindowWidth);
+	        }
+	    }, {
+	        key: 'updateWindowWidth',
+	        value: function updateWindowWidth() {
+	            this.setState({
+	                windowWidth: window.innerWidth
+	            });
 	        }
 	    }, {
 	        key: 'render',
 	        value: function render() {
-	            return React.createElement(
-	                'div',
-	                null,
-	                React.createElement(_header.Header, null),
-	                this.generatePage()
-	            );
+	            var worktopStyle = {
+	                width: this.state.windowWidth - 250 + 'px'
+	            };
+	            if (this.props.tabs[this.props.activeTab].type == 'main') {
+	                worktopStyle.width = this.state.windowWidth + 'px';
+	            }
+	            var worktopElement = React.createElement('section', { className: 'worktop', style: worktopStyle });
+	            return worktopElement;
 	        }
 	    }]);
 
-	    return NotFound;
+	    return WorktopComponent;
 	}(React.Component);
 
-/***/ },
-/* 541 */
-/***/ function(module, exports, __webpack_require__) {
+	function ConnectWorktop(state) {
+	    return {
+	        tabs: state.tabs.tabsList,
+	        activeTab: state.tabs.activeTab
+	    };
+	}
 
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	exports.Footer = undefined;
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(1);
-
-	var React = _interopRequireWildcard(_react);
-
-	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var Footer = exports.Footer = function (_React$Component) {
-	    _inherits(Footer, _React$Component);
-
-	    function Footer() {
-	        _classCallCheck(this, Footer);
-
-	        return _possibleConstructorReturn(this, (Footer.__proto__ || Object.getPrototypeOf(Footer)).apply(this, arguments));
-	    }
-
-	    _createClass(Footer, [{
-	        key: 'render',
-	        value: function render() {
-	            return React.createElement(
-	                'footer',
-	                null,
-	                React.createElement(
-	                    'p',
-	                    null,
-	                    'Footer'
-	                )
-	            );
-	        }
-	    }]);
-
-	    return Footer;
-	}(React.Component);
+	exports.default = (0, _reactRedux.connect)(ConnectWorktop)(WorktopComponent);
 
 /***/ }
 /******/ ]);

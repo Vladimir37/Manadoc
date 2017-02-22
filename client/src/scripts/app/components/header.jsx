@@ -10,7 +10,6 @@ export class Header extends React.Component {
                 <Provider store={store}>
                     <Tabs/>
                 </Provider>
-                <h1>Main title</h1>
             </header>
         );
     }

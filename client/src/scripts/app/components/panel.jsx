@@ -1,18 +1,22 @@
 import * as React from 'react';
 import {connect} from 'react-redux';
+import {Jumbotron} from 'react-bootstrap';
 
 class PanelComponent extends React.Component {
     render() {
-        return (
-            <div className="side-panel"></div>
-        );
+        let panelElement = null;
+        if (this.props.tabs[this.props.activeTab].type != 'main') {
+            panelElement = <Jumbotron className="side-panel"></Jumbotron>;
+        }
+        return panelElement;
     }
 }
 
-function ConnectPanels(state) {
+function ConnectPanel(state) {
     return {
-        tabs: state.tabs.tabsList
+        tabs: state.tabs.tabsList,
+        activeTab: state.tabs.activeTab
     };
 }
 
-export default connect(ConnectPanels)(PanelComponent); 
+export default connect(ConnectPanel)(PanelComponent); 
