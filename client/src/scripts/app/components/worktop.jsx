@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {connect} from 'react-redux';
 import {Jumbotron} from 'react-bootstrap';
+import TabsContent from './tabsContent.jsx';
 
 class WorktopComponent extends React.Component {
     constructor(props) {
@@ -33,7 +34,13 @@ class WorktopComponent extends React.Component {
         if (this.props.tabs[this.props.activeTab].type == 'main') {
             worktopStyle.width = this.state.windowWidth + 'px';
         }
-        let worktopElement = <section className='worktop' style={worktopStyle}></section>;
+        let worktopElement = (
+                <section className='worktop' style={worktopStyle}>
+                    <div className="worktop-wrapper">
+                        <TabsContent/>
+                    </div>
+                </section>
+            );
         return worktopElement;
     }
 }
