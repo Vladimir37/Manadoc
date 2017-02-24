@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {connect} from 'react-redux';
 import {Jumbotron} from 'react-bootstrap';
+import MainPage from './pages/main.jsx';
 
 class TabsContentComponent extends React.Component {
     constructor(props) {
@@ -18,10 +19,23 @@ class TabsContentComponent extends React.Component {
             if (this.props.activeTab == index) {
                 classes = 'page page-active';
             }
-            let page = <section key={index} className={classes}></section>;
-            
-            // Render page
+            let tabContent;
 
+            switch (tab.type) {
+                case 'main':
+                    tabContent = <MainPage/>;
+                    break;
+            
+                default:
+                    break;
+            }
+
+            let page = (
+                <section key={index} className={classes}>
+                    {tabContent}
+                </section>
+                );
+            
             pages.push(page);
         });
         return pages;

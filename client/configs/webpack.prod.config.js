@@ -22,6 +22,8 @@ module.exports = {
         }]
     },
 
+    target: 'electron',
+
     plugins: [
         new webpack.NoErrorsPlugin(),
         new webpack.optimize.UglifyJsPlugin({minimize: true})
