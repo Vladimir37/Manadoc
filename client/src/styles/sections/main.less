@@ -1,11 +1,52 @@
 .main {
-    &-empty {
+    &-top {
         &-button {
+            margin-top: 30px;
+            padding: 20px 0;
             text-align: center;
+            border: 2px solid grey;
+        }
+
+        &-text {
+            font-size: 20px;
         }
 
         &-glyph {
             font-size: 20px;
+        }
+    }
+
+    &-bottom-container {
+        margin-top: 30px;
+    }
+
+    &-project {
+        position: relative;
+        padding: 5px;
+        margin-bottom: 10px;
+        border: 1px solid grey;
+        &-text {
+            display: block;
+        }
+
+        &-name {
+            font-weight: bold;
+        }
+
+        &-addr {
+            font-style: italic;
+        }
+
+        &-time {
+            font-size: 12px;
+            color: grey;
+        }
+
+        &-remove {
+            position: absolute;
+            top: auto;
+            bottom: 5px;
+            right: 5px;
         }
     }
 }
