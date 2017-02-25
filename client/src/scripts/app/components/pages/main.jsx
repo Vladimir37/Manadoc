@@ -2,6 +2,8 @@ import * as React from 'react';
 import {connect} from 'react-redux';
 import {Grid, Row, Col, Glyphicon} from 'react-bootstrap';
 import moment from 'moment';
+
+import MainActions from '../../utility/actions/main.jsx';
 import Config from '../../utility/config.jsx';
 
 class MainPageComponent extends React.Component {
@@ -50,19 +52,19 @@ class MainPageComponent extends React.Component {
                     <Grid>
                         <Row>
                             <Col sm={4} md={4}>
-                                <div className="main-top-button">
+                                <div className="main-top-button" onClick={MainActions.CreateNewProject}>
                                     <Glyphicon className="main-top-glyph" glyph="plus"/><br/>
                                     <span className="main-top-text">New project</span>
                                 </div>
                             </Col>
                             <Col sm={4} md={4}>
-                                <div className="main-top-button">
+                                <div className="main-top-button" onClick={MainActions.OpenProject}>
                                     <Glyphicon className="main-top-glyph" glyph="folder-open"/><br/>
                                     <span className="main-top-text">Open project</span>
                                 </div>
                             </Col>
                             <Col sm={4} md={4}>
-                                <div className="main-top-button">
+                                <div className="main-top-button" onClick={MainActions.OpenHelp}>
                                     <Glyphicon className="main-top-glyph" glyph="education"/><br/>
                                     <span className="main-top-text">Help</span>
                                 </div>

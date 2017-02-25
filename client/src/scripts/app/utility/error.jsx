@@ -1,14 +1,14 @@
 const {app, dialog} = require('electron').remote;
-// const app = require('electron').remote.app;
-// const dialog = require('electron').remote.dialog;
 
 class ErrorUtility {
     constructor() {
-        this.throwError = this.throwError.bind(this);
+        this.throwErrorGen = this.throwErrorGen.bind(this);
+        this.throwUncriticalErrorGen = this.throwUncriticalErrorGen.bind(this);
+        this.throwUncriticalError = this.throwUncriticalError.bind(this);
         this.generateText = this.generateText.bind(this);
     }
 
-    throwError(err) {
+    throwErrorGen(err) {
          var windowOprtions = {
             type: 'error',
             buttons: ['OK'],
@@ -16,6 +16,24 @@ class ErrorUtility {
         };
         dialog.showMessageBox(windowOprtions);
         app.exit(1);
+    }
+
+    throwUncriticalErrorGen(err) {
+        var windowOprtions = {
+            type: 'error',
+            buttons: ['OK'],
+            message: this.generateText(err)
+        };
+        dialog.showMessageBox(windowOprtions);
+    }
+
+    throwUncriticalError(text) {
+        var windowOprtions = {
+            type: 'error',
+            buttons: ['OK'],
+            message: text
+        };
+        dialog.showMessageBox(windowOprtions);
     }
 
     generateText(err) {

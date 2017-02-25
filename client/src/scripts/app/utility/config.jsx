@@ -16,7 +16,7 @@ class ConfigUtility {
             config = fs.readFileSync(this.base_addr + '/app.json', 'utf8');
             config = JSON.parse(config);
         } catch (err) {
-            ErrUtility.throwError(err);
+            ErrUtility.throwErrorGen(err);
         }
         return config;
     }
@@ -26,7 +26,7 @@ class ConfigUtility {
         try {
             fs.writeFileSync(this.base_addr + '/app.json', config);
         } catch (err) {
-            ErrUtility.throwError(err);
+            ErrUtility.throwErrorGen(err);
         }
     }
 }

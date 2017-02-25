@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/Vladimir37/Manadoc/issues"
   },
-  "homepage": "https://github.com/Vladimir37/Manadoc#readme"
+  "homepage": "https://github.com/Vladimir37/Manadoc#readme",
+  "dependencies": {
+    "md5": "^2.2.1"
+  }
 }
