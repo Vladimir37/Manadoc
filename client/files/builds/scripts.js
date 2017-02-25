@@ -63410,10 +63410,15 @@
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+	var _error = __webpack_require__(653);
+
+	var _error2 = _interopRequireDefault(_error);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	var fs = __webpack_require__(653);
-	var dialog = __webpack_require__(654).remote.dialog;
+	var fs = __webpack_require__(655);
 
 	var ConfigUtility = function () {
 	    function ConfigUtility() {
@@ -63428,8 +63433,13 @@
 	    _createClass(ConfigUtility, [{
 	        key: 'readConfig',
 	        value: function readConfig() {
-	            var config = fs.readFileSync(this.base_addr + '/app.json', 'utf8');
-	            config = JSON.parse(config);
+	            var config = void 0;
+	            try {
+	                config = fs.readFileSync(this.base_addr + '/app.json', 'utf8');
+	                config = JSON.parse(config);
+	            } catch (err) {
+	                _error2.default.throwError(err);
+	            }
 	            return config;
 	        }
 	    }, {
@@ -63439,12 +63449,7 @@
 	            try {
 	                fs.writeFileSync(this.base_addr + '/app.json', config);
 	            } catch (err) {
-	                var windowOprtions = {
-	                    type: 'error',
-	                    buttons: ['OK'],
-	                    message: JSON.stringify(err)
-	                };
-	                dialog.showMessageBox(windowOprtions);
+	                _error2.default.throwError(err);
 	            }
 	        }
 	    }]);
@@ -63458,15 +63463,74 @@
 
 /***/ },
 /* 653 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
-	module.exports = require("fs");
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var _require$remote = __webpack_require__(654).remote,
+	    app = _require$remote.app,
+	    dialog = _require$remote.dialog;
+	// const app = require('electron').remote.app;
+	// const dialog = require('electron').remote.dialog;
+
+	var ErrorUtility = function () {
+	    function ErrorUtility() {
+	        _classCallCheck(this, ErrorUtility);
+
+	        this.throwError = this.throwError.bind(this);
+	        this.generateText = this.generateText.bind(this);
+	    }
+
+	    _createClass(ErrorUtility, [{
+	        key: 'throwError',
+	        value: function throwError(err) {
+	            var windowOprtions = {
+	                type: 'error',
+	                buttons: ['OK'],
+	                message: this.generateText(err)
+	            };
+	            dialog.showMessageBox(windowOprtions);
+	            app.exit(1);
+	        }
+	    }, {
+	        key: 'generateText',
+	        value: function generateText(err) {
+	            console.log(app);
+	            switch (err.code) {
+	                case 'ENOENT':
+	                    return 'File not found: ' + err.path;
+	                default:
+	                    return err.message || JSON.stringify(err);
+	            }
+	        }
+	    }]);
+
+	    return ErrorUtility;
+	}();
+
+	var ErrorUtilityApp = new ErrorUtility();
+
+	exports.default = ErrorUtilityApp;
 
 /***/ },
 /* 654 */
 /***/ function(module, exports) {
 
 	module.exports = require("electron");
+
+/***/ },
+/* 655 */
+/***/ function(module, exports) {
+
+	module.exports = require("fs");
 
 /***/ }
 /******/ ]);

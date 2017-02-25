@@ -1,5 +1,6 @@
+import ErrUtility from './error.jsx';
+
 const fs = require('fs');
-const dialog = require('electron').remote.dialog;
 
 class ConfigUtility {
     constructor() {
@@ -10,8 +11,13 @@ class ConfigUtility {
     }
 
     readConfig() {
-        var config = fs.readFileSync(this.base_addr + '/app.json', 'utf8');
-        config = JSON.parse(config);
+        let config;
+        try {
+            config = fs.readFileSync(this.base_addr + '/app.json', 'utf8');
+            config = JSON.parse(config);
+        } catch (err) {
+            ErrUtility.throwError(err);
+        }
         return config;
     }
 
@@ -20,12 +26,7 @@ class ConfigUtility {
         try {
             fs.writeFileSync(this.base_addr + '/app.json', config);
         } catch (err) {
-            var windowOprtions = {
-                type: 'error',
-                buttons: ['OK'],
-                message: JSON.stringify(err)
-            };
-            dialog.showMessageBox(windowOprtions);
+            ErrUtility.throwError(err);
         }
     }
 }
