@@ -48367,16 +48367,37 @@
 	        _this.state = {
 	            history: _config2.default.readConfig().projects
 	        };
+
+	        _this.deleteProject = _this.deleteProject.bind(_this);
 	        return _this;
 	    }
 
 	    _createClass(MainPageComponent, [{
+	        key: 'deleteProject',
+	        value: function deleteProject(num) {
+	            var _this2 = this;
+
+	            return function () {
+	                var newHistory = _this2.state.history;
+	                newHistory.splice(num, 1);
+	                var config = _config2.default.readConfig();
+	                config.projects = newHistory;
+	                _config2.default.writeConfig(config);
+	                _this2.setState({
+	                    history: _config2.default.readConfig().projects
+	                });
+	            };
+	        }
+	    }, {
 	        key: 'render',
 	        value: function render() {
+	            var _this3 = this;
+
 	            var projects = this.state.history.map(function (project, index) {
-	                project.name = project.name.length < 13 ? project.name : project.name.slice(0, 13) + '...';
-	                project.addr = project.addr.length < 13 ? project.addr : '...' + project.addr.slice(-13);
-	                project.time = (0, _moment2.default)().startOf('hour').from(project.time);
+	                var projectElem = {};
+	                projectElem.name = project.name.length < 13 ? project.name : project.name.slice(0, 13) + '...';
+	                projectElem.addr = project.addr.length < 13 ? project.addr : '...' + project.addr.slice(-13);
+	                projectElem.time = (0, _moment2.default)().startOf('hour').from(project.time);
 	                return React.createElement(
 	                    _reactBootstrap.Col,
 	                    { sm: 3, md: 3, key: index },
@@ -48386,19 +48407,19 @@
 	                        React.createElement(
 	                            'span',
 	                            { className: 'main-project-text main-project-name' },
-	                            project.name
+	                            projectElem.name
 	                        ),
 	                        React.createElement(
 	                            'span',
 	                            { className: 'main-project-text main-project-addr' },
-	                            project.addr
+	                            projectElem.addr
 	                        ),
 	                        React.createElement(
 	                            'span',
 	                            { className: 'main-project-text main-project-time' },
-	                            project.time
+	                            projectElem.time
 	                        ),
-	                        React.createElement(_reactBootstrap.Glyphicon, { className: 'main-project-remove', glyph: 'remove' }),
+	                        React.createElement(_reactBootstrap.Glyphicon, { className: 'main-project-remove', onClick: _this3.deleteProject(index), glyph: 'remove' }),
 	                        React.createElement('br', null)
 	                    )
 	                );
@@ -63392,6 +63413,7 @@
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	var fs = __webpack_require__(653);
+	var dialog = __webpack_require__(654).remote.dialog;
 
 	var ConfigUtility = function () {
 	    function ConfigUtility() {
@@ -63400,13 +63422,30 @@
 	        this.base_addr = './app';
 
 	        this.readConfig = this.readConfig.bind(this);
+	        this.writeConfig = this.writeConfig.bind(this);
 	    }
 
 	    _createClass(ConfigUtility, [{
 	        key: 'readConfig',
 	        value: function readConfig() {
-	            var config = JSON.parse(fs.readFileSync(this.base_addr + '/app.json', 'utf8'));
+	            var config = fs.readFileSync(this.base_addr + '/app.json', 'utf8');
+	            config = JSON.parse(config);
 	            return config;
+	        }
+	    }, {
+	        key: 'writeConfig',
+	        value: function writeConfig(config) {
+	            config = JSON.stringify(config);
+	            try {
+	                fs.writeFileSync(this.base_addr + '/app.json', config);
+	            } catch (err) {
+	                var windowOprtions = {
+	                    type: 'error',
+	                    buttons: ['OK'],
+	                    message: JSON.stringify(err)
+	                };
+	                dialog.showMessageBox(windowOprtions);
+	            }
 	        }
 	    }]);
 
@@ -63422,6 +63461,12 @@
 /***/ function(module, exports) {
 
 	module.exports = require("fs");
+
+/***/ },
+/* 654 */
+/***/ function(module, exports) {
+
+	module.exports = require("electron");
 
 /***/ }
 /******/ ]);

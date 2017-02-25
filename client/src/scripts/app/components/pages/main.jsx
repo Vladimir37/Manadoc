@@ -11,19 +11,35 @@ class MainPageComponent extends React.Component {
         this.state = {
             history: Config.readConfig().projects
         };
+
+        this.deleteProject = this.deleteProject.bind(this);
+    }
+
+    deleteProject(num) {
+        return () => {
+            let newHistory = this.state.history;
+            newHistory.splice(num, 1);
+            let config = Config.readConfig();
+            config.projects = newHistory;
+            Config.writeConfig(config);
+            this.setState({
+                history: Config.readConfig().projects
+            });
+        }
     }
 
     render() {
         let projects = this.state.history.map((project, index) => {
-            project.name = project.name.length < 13 ? project.name : project.name.slice(0, 13) + '...';
-            project.addr = project.addr.length < 13 ? project.addr : '...' + project.addr.slice(-13);
-            project.time = moment().startOf('hour').from(project.time);
+            var projectElem = {};
+            projectElem.name = project.name.length < 13 ? project.name : project.name.slice(0, 13) + '...';
+            projectElem.addr = project.addr.length < 13 ? project.addr : '...' + project.addr.slice(-13);
+            projectElem.time = moment().startOf('hour').from(project.time);
             return (<Col sm={3} md={3} key={index}>
                 <article className="main-project">
-                    <span className="main-project-text main-project-name">{project.name}</span>
-                    <span className="main-project-text main-project-addr">{project.addr}</span>
-                    <span className="main-project-text main-project-time">{project.time}</span>
-                    <Glyphicon className="main-project-remove" glyph="remove"/><br/>
+                    <span className="main-project-text main-project-name">{projectElem.name}</span>
+                    <span className="main-project-text main-project-addr">{projectElem.addr}</span>
+                    <span className="main-project-text main-project-time">{projectElem.time}</span>
+                    <Glyphicon className="main-project-remove" onClick={this.deleteProject(index)} glyph="remove"/><br/>
                 </article>
             </Col>);
         });
