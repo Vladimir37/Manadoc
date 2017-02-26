@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import {Grid, Row, Col, Glyphicon} from 'react-bootstrap';
 import moment from 'moment';
 
+import store from '../../store/store.jsx';
 import MainActions from '../../utility/actions/main.jsx';
 import Config from '../../utility/config.jsx';
 
@@ -10,28 +11,24 @@ class MainPageComponent extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {
-            history: Config.readConfig().projects
-        };
-
         this.deleteProject = this.deleteProject.bind(this);
     }
 
     deleteProject(num) {
         return () => {
-            let newHistory = this.state.history;
-            newHistory.splice(num, 1);
-            let config = Config.readConfig();
-            config.projects = newHistory;
-            Config.writeConfig(config);
-            this.setState({
-                history: Config.readConfig().projects
-            });
+            // let newConfig = this.props.config;
+            // newConfig.projects.splice(num, 1);
+            let storeAction = {
+                type: 'config',
+                act: 'delete_project',
+                num: num
+            };
+            store.dispatch(storeAction);
         }
     }
 
     render() {
-        let projects = this.state.history.map((project, index) => {
+        let projects = this.props.config.projects.map((project, index) => {
             var projectElem = {};
             projectElem.name = project.name.length < 13 ? project.name : project.name.slice(0, 13) + '...';
             projectElem.addr = project.addr.length < 13 ? project.addr : '...' + project.addr.slice(-13);
@@ -86,6 +83,7 @@ class MainPageComponent extends React.Component {
 
 function ConnectMainPage(state) {
     return {
+        config: state.config,
         tabs: state.tabs.tabsList,
         activeTab: state.tabs.activeTab
     };

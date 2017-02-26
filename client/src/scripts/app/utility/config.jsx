@@ -1,3 +1,4 @@
+import store from '../store/store.jsx';
 import ErrUtility from './error.jsx';
 
 const fs = require('fs');

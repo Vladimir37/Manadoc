@@ -2,6 +2,8 @@ import {shell, remote} from 'electron';
 import fs from 'fs';
 import md5 from 'md5';
 
+import store from '../../store/store.jsx';
+import Main from '../../components/pages/main.jsx';
 import ErrUtility from '../error.jsx';
 
 class MainActions {
@@ -71,19 +73,25 @@ class MainActions {
         projectTemplate.lists[0].hash = md5(JSON.stringify(projectTemplate.lists[0]));
         projectTemplate.lists[0].blocks[0].hash = md5(JSON.stringify(projectTemplate.lists[0].blocks[0]));
         
-
-        fs.open(addr,'r',function(err, fd){
-        if (err) {
-            fs.writeFile(addr, JSON.stringify(projectTemplate), function(err) {
-                if(err) {
-                    ErrUtility.throwUncriticalErrorGen(err);
-                }
-                console.log("Success!");
-            });
-        } else {
-            ErrUtility.throwUncriticalError('File already exist!');
-        }
-    });
+        fs.writeFile(addr, JSON.stringify(projectTemplate), function(err) {
+            if(err) {
+                ErrUtility.throwUncriticalErrorGen(err);
+            }
+            
+            // Create new history
+            let config = store.getState().config;
+            let newProjectHistory = {
+                name: projectName,
+                addr: addr,
+                time: new Date()
+            };
+            config.projects.unshift(newProjectHistory);
+            let storeAction = {
+                type: 'config',
+                config: this.readConfig()
+            };
+            store.dispatch(config);
+        });
     }
 }
 

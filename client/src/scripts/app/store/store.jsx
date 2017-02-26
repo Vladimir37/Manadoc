@@ -1,4 +1,8 @@
 import {createStore} from 'redux';
+
+import ConfigUtility from '../utility/config.jsx';
+
+import configReducer from './reducers/config.jsx';
 import tabReducer from './reducers/tabs.jsx';
 
 let mainTab = {
@@ -10,6 +14,7 @@ let mainTab = {
 }
 
 let initialState = {
+    config: ConfigUtility.readConfig(),
     tabs: {
         tabsList: [mainTab],
         activeTab: 0
@@ -20,9 +25,13 @@ function mainReducer(state = initialState, action) {
     switch (action.type) {
         case 'tab':
             return tabReducer(state, action);
+        case 'config':
+            return configReducer(state, action);
         default:
             return state;
     }
 }
 
-export let store = createStore(mainReducer);
+let store = createStore(mainReducer);
+
+export default store;

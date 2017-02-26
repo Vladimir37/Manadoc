@@ -1,6 +1,7 @@
 export default function tabReducer(state, action) {
     switch (action.act) {
         case 'add':
+            // TODO: remove mutation
             let newTab = generateTab(state, action);
             state.tabs.tabsList.push(newTab);
             return state;
