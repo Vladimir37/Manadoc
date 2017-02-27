@@ -31,7 +31,7 @@ class WorktopComponent extends React.Component {
         let worktopStyle = {
             width: (this.state.windowWidth - 250) + 'px'
         };
-        if (this.props.tabs[this.props.activeTab].type == 'main') {
+        if (this.props.tabs[this.props.activeTab - 1].type == 'main') {
             worktopStyle.width = this.state.windowWidth + 'px';
         }
         let worktopElement = (

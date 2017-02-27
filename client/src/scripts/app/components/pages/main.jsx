@@ -16,8 +16,6 @@ class MainPageComponent extends React.Component {
 
     deleteProject(num) {
         return () => {
-            // let newConfig = this.props.config;
-            // newConfig.projects.splice(num, 1);
             let storeAction = {
                 type: 'config',
                 act: 'delete_project',
@@ -32,7 +30,7 @@ class MainPageComponent extends React.Component {
             var projectElem = {};
             projectElem.name = project.name.length < 13 ? project.name : project.name.slice(0, 13) + '...';
             projectElem.addr = project.addr.length < 13 ? project.addr : '...' + project.addr.slice(-13);
-            projectElem.time = moment().startOf('hour').from(project.time);
+            projectElem.time = moment(project.time).fromNow();
             return (<Col sm={3} md={3} key={index}>
                 <article className="main-project">
                     <span className="main-project-text main-project-name">{projectElem.name}</span>

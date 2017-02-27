@@ -16,7 +16,7 @@ class TabsContentComponent extends React.Component {
         let pages = [];
         this.props.tabs.forEach((tab, index) => {
             let classes = 'page';
-            if (this.props.activeTab == index) {
+            if (this.props.activeTab == index + 1) {
                 classes = 'page page-active';
             }
             let tabContent;
@@ -25,13 +25,12 @@ class TabsContentComponent extends React.Component {
                 case 'main':
                     tabContent = <MainPage/>;
                     break;
-            
                 default:
                     break;
             }
 
             let page = (
-                <section key={index} className={classes}>
+                <section key={index + 1} className={classes}>
                     {tabContent}
                 </section>
                 );

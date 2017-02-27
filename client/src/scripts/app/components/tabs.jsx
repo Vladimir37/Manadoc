@@ -2,13 +2,26 @@ import * as React from 'react';
 import {connect} from 'react-redux';
 import {Nav, NavItem} from 'react-bootstrap';
 
+import store from '../store/store.jsx';
+
 class TabsComponent extends React.Component {
+    changeTab(num) {
+        return () => {
+            let storeAction = {
+                type: 'tabs',
+                act: 'select',
+                num: num
+            };
+            store.dispatch(storeAction);
+        }
+    }
+
     render() {
-        let tabs = this.props.tabs.map((tab) => {
-            return <NavItem key={tab.ID} eventKey={tab.ID}>{tab.title}</NavItem>;
+        let tabs = this.props.tabs.map((tab, index) => {
+            return <NavItem key={index + 1} eventKey={index + 1}>{tab.title}</NavItem>;
         });
         return (
-            <Nav bsStyle="tabs" activeKey="1">
+            <Nav bsStyle="tabs" activeKey={this.props.activeTab}>
                 {tabs}
             </Nav>
         );
@@ -17,7 +30,8 @@ class TabsComponent extends React.Component {
 
 function ConnectTabs(state) {
     return {
-        tabs: state.tabs.tabsList
+        tabs: state.tabs.tabsList,
+        activeTab: state.tabs.activeTab
     };
 }
 

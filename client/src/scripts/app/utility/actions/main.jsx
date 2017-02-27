@@ -79,18 +79,24 @@ class MainActions {
             }
             
             // Create new history
-            let config = store.getState().config;
-            let newProjectHistory = {
-                name: projectName,
-                addr: addr,
-                time: new Date()
-            };
-            config.projects.unshift(newProjectHistory);
-            let storeAction = {
+            let storeActionHistory = {
                 type: 'config',
-                config: this.readConfig()
+                act: 'add_project',
+                name: projectName,
+                addr: addr
             };
-            store.dispatch(config);
+            store.dispatch(storeActionHistory);
+            // Create new tab
+            let storeActionTab = {
+                type: 'tab',
+                act: 'add',
+                detail: {
+                    type: 'project',
+                    addr: addr,
+                    title: projectName
+                }
+            };
+            store.dispatch(storeActionTab);
         });
     }
 }

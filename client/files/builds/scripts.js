@@ -28535,7 +28535,7 @@
 	    config: _config2.default.readConfig(),
 	    tabs: {
 	        tabsList: [mainTab],
-	        activeTab: 0
+	        activeTab: 1
 	    }
 	};
 
@@ -28736,11 +28736,23 @@
 
 	function configReducer(state, action) {
 	    switch (action.act) {
+	        case 'add_project':
+	            var newProject = {
+	                name: action.name,
+	                addr: action.addr,
+	                time: new Date()
+	            };
+	            var projectsAdded = [newProject].concat(_toConsumableArray(state.config.projects));
+	            var configAdded = Object.assign({}, state.config, { projects: projectsAdded });
+	            _config2.default.writeConfig(configAdded);
+	            return Object.assign({}, state, { config: configAdded });
 	        case 'delete_project':
-	            var projects = [].concat(_toConsumableArray(state.config.projects.slice(0, action.num)), _toConsumableArray(state.config.projects.slice(action.num + 1)));
-	            var config = Object.assign({}, state.config, { projects: projects });
-	            _config2.default.writeConfig(config);
-	            return Object.assign({}, state, { config: config });;
+	            var projectsDeleted = [].concat(_toConsumableArray(state.config.projects.slice(0, action.num)), _toConsumableArray(state.config.projects.slice(action.num + 1)));
+	            var configDeleted = Object.assign({}, state.config, { projects: projectsDeleted });
+	            _config2.default.writeConfig(configDeleted);
+	            return Object.assign({}, state, { config: configDeleted });
+	        default:
+	            return state;
 	    }
 	}
 
@@ -28754,12 +28766,21 @@
 	    value: true
 	});
 	exports.default = tabReducer;
+
+	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
 	function tabReducer(state, action) {
 	    switch (action.act) {
+	        case 'select':
+	            var tabsSelected = Object.assign({}, state.tabs, { activeTab: action.num });
+	            return Object.assign({}, state, { tabs: tabsSelected });
 	        case 'add':
-	            // TODO: remove mutation
 	            var newTab = generateTab(state, action);
-	            state.tabs.tabsList.push(newTab);
+	            var tabsList = [].concat(_toConsumableArray(state.tabs.tabsList), [newTab]);
+	            var activeTab = tabsList.length;
+	            var tabsAdded = Object.assign({}, state.tabs, { tabsList: tabsList, activeTab: activeTab });
+	            return Object.assign({}, state, { tabs: tabsAdded });
+	        default:
 	            return state;
 	    }
 	}
@@ -28920,6 +28941,12 @@
 
 	var _reactBootstrap = __webpack_require__(278);
 
+	var _store = __webpack_require__(268);
+
+	var _store2 = _interopRequireDefault(_store);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -28938,18 +28965,30 @@
 	    }
 
 	    _createClass(TabsComponent, [{
+	        key: 'changeTab',
+	        value: function changeTab(num) {
+	            return function () {
+	                var storeAction = {
+	                    type: 'tabs',
+	                    act: 'select',
+	                    num: num
+	                };
+	                _store2.default.dispatch(storeAction);
+	            };
+	        }
+	    }, {
 	        key: 'render',
 	        value: function render() {
-	            var tabs = this.props.tabs.map(function (tab) {
+	            var tabs = this.props.tabs.map(function (tab, index) {
 	                return React.createElement(
 	                    _reactBootstrap.NavItem,
-	                    { key: tab.ID, eventKey: tab.ID },
+	                    { key: index + 1, eventKey: index + 1 },
 	                    tab.title
 	                );
 	            });
 	            return React.createElement(
 	                _reactBootstrap.Nav,
-	                { bsStyle: 'tabs', activeKey: '1' },
+	                { bsStyle: 'tabs', activeKey: this.props.activeTab },
 	                tabs
 	            );
 	        }
@@ -28960,7 +28999,8 @@
 
 	function ConnectTabs(state) {
 	    return {
-	        tabs: state.tabs.tabsList
+	        tabs: state.tabs.tabsList,
+	        activeTab: state.tabs.activeTab
 	    };
 	}
 
@@ -48290,7 +48330,7 @@
 	        key: 'render',
 	        value: function render() {
 	            var panelElement = null;
-	            if (this.props.tabs[this.props.activeTab].type != 'main') {
+	            if (this.props.tabs[this.props.activeTab - 1].type != 'main') {
 	                panelElement = React.createElement(_reactBootstrap.Jumbotron, { className: 'side-panel' });
 	            }
 	            return panelElement;
@@ -48382,7 +48422,7 @@
 	            var worktopStyle = {
 	                width: this.state.windowWidth - 250 + 'px'
 	            };
-	            if (this.props.tabs[this.props.activeTab].type == 'main') {
+	            if (this.props.tabs[this.props.activeTab - 1].type == 'main') {
 	                worktopStyle.width = this.state.windowWidth + 'px';
 	            }
 	            var worktopElement = React.createElement(
@@ -48466,7 +48506,7 @@
 	            var pages = [];
 	            this.props.tabs.forEach(function (tab, index) {
 	                var classes = 'page';
-	                if (_this2.props.activeTab == index) {
+	                if (_this2.props.activeTab == index + 1) {
 	                    classes = 'page page-active';
 	                }
 	                var tabContent = void 0;
@@ -48475,14 +48515,13 @@
 	                    case 'main':
 	                        tabContent = React.createElement(_main2.default, null);
 	                        break;
-
 	                    default:
 	                        break;
 	                }
 
 	                var page = React.createElement(
 	                    'section',
-	                    { key: index, className: classes },
+	                    { key: index + 1, className: classes },
 	                    tabContent
 	                );
 
@@ -48575,30 +48614,25 @@
 	    _createClass(MainPageComponent, [{
 	        key: 'deleteProject',
 	        value: function deleteProject(num) {
-	            var _this2 = this;
-
 	            return function () {
-	                // let newConfig = this.props.config;
-	                // newConfig.projects.splice(num, 1);
 	                var storeAction = {
 	                    type: 'config',
 	                    act: 'delete_project',
 	                    num: num
 	                };
 	                _store2.default.dispatch(storeAction);
-	                console.log(_this2.props.config);
 	            };
 	        }
 	    }, {
 	        key: 'render',
 	        value: function render() {
-	            var _this3 = this;
+	            var _this2 = this;
 
 	            var projects = this.props.config.projects.map(function (project, index) {
 	                var projectElem = {};
 	                projectElem.name = project.name.length < 13 ? project.name : project.name.slice(0, 13) + '...';
 	                projectElem.addr = project.addr.length < 13 ? project.addr : '...' + project.addr.slice(-13);
-	                projectElem.time = (0, _moment2.default)().startOf('hour').from(project.time);
+	                projectElem.time = (0, _moment2.default)(project.time).fromNow();
 	                return React.createElement(
 	                    _reactBootstrap.Col,
 	                    { sm: 3, md: 3, key: index },
@@ -48620,7 +48654,7 @@
 	                            { className: 'main-project-text main-project-time' },
 	                            projectElem.time
 	                        ),
-	                        React.createElement(_reactBootstrap.Glyphicon, { className: 'main-project-remove', onClick: _this3.deleteProject(index), glyph: 'remove' }),
+	                        React.createElement(_reactBootstrap.Glyphicon, { className: 'main-project-remove', onClick: _this2.deleteProject(index), glyph: 'remove' }),
 	                        React.createElement('br', null)
 	                    )
 	                );
@@ -63721,18 +63755,24 @@
 	                }
 
 	                // Create new history
-	                var config = _store2.default.getState().config;
-	                var newProjectHistory = {
-	                    name: projectName,
-	                    addr: addr,
-	                    time: new Date()
-	                };
-	                config.projects.unshift(newProjectHistory);
-	                var storeAction = {
+	                var storeActionHistory = {
 	                    type: 'config',
-	                    config: this.readConfig()
+	                    act: 'add_project',
+	                    name: projectName,
+	                    addr: addr
 	                };
-	                _store2.default.dispatch(config);
+	                _store2.default.dispatch(storeActionHistory);
+	                // Create new tab
+	                var storeActionTab = {
+	                    type: 'tab',
+	                    act: 'add',
+	                    detail: {
+	                        type: 'project',
+	                        addr: addr,
+	                        title: projectName
+	                    }
+	                };
+	                _store2.default.dispatch(storeActionTab);
 	            });
 	        }
 	    }]);

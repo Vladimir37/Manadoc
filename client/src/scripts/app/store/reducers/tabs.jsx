@@ -1,9 +1,18 @@
 export default function tabReducer(state, action) {
     switch (action.act) {
+        case 'select':
+            let tabsSelected = Object.assign({}, state.tabs, {activeTab: action.num});
+            return Object.assign({}, state, {tabs: tabsSelected});
         case 'add':
-            // TODO: remove mutation
             let newTab = generateTab(state, action);
-            state.tabs.tabsList.push(newTab);
+            let tabsList = [
+                ...state.tabs.tabsList,
+                newTab
+            ];
+            let activeTab = tabsList.length;
+            let tabsAdded = Object.assign({}, state.tabs, {tabsList, activeTab});
+            return Object.assign({}, state, {tabs: tabsAdded});
+        default:
             return state;
     }
 }

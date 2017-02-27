@@ -17,7 +17,7 @@ let initialState = {
     config: ConfigUtility.readConfig(),
     tabs: {
         tabsList: [mainTab],
-        activeTab: 0
+        activeTab: 1
     }
 }
 
