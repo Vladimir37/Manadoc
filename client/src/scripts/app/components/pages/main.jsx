@@ -29,13 +29,19 @@ class MainPageComponent extends React.Component {
         let projects = this.props.config.projects.map((project, index) => {
             var projectElem = {};
             projectElem.name = project.name.length < 13 ? project.name : project.name.slice(0, 13) + '...';
-            projectElem.addr = project.addr.length < 13 ? project.addr : '...' + project.addr.slice(-13);
+            projectElem.addr = project.addr.length < 17 ? project.addr : '...' + project.addr.slice(-17);
             projectElem.time = moment(project.time).fromNow();
             return (<Col sm={3} md={3} key={index}>
                 <article className="main-project">
-                    <span className="main-project-text main-project-name">{projectElem.name}</span>
-                    <span className="main-project-text main-project-addr">{projectElem.addr}</span>
-                    <span className="main-project-text main-project-time">{projectElem.time}</span>
+                    <span className="main-project-text main-project-name" title={project.name}>
+                        {projectElem.name}
+                    </span>
+                    <span className="main-project-text main-project-addr" title={project.addr}>
+                        {projectElem.addr}
+                    </span>
+                    <span className="main-project-text main-project-time" title={moment(project.time).format('MMMM Do YYYY, h:mm:ss a')}>
+                        {projectElem.time}
+                    </span>
                     <Glyphicon className="main-project-remove" onClick={this.deleteProject(index)} glyph="remove"/><br/>
                 </article>
             </Col>);

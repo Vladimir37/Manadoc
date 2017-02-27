@@ -13,17 +13,18 @@ class MainActions {
         this.OpenHelp = this.OpenHelp.bind(this);
 
         this.createProjectFile = this.createProjectFile.bind(this);
+        this.openProjectFile = this.openProjectFile.bind(this);
     }
 
     CreateNewProject() {
         let createData = {
-            title: 'Create new project',
+            title: 'Create new Manadoc project',
             buttonLabel: 'Create',
-            filter: {
-                name: 'Manadoc project',
+            filter: [{
+                name: 'Custom File Type',
                 extensions: ['mndc']
-            }
-        }
+            }]
+        };
         remote.dialog.showSaveDialog(createData, (entered) => {
             if (!entered) {
                 return false;
@@ -37,7 +38,27 @@ class MainActions {
     }
 
     OpenProject() {
-        //
+        let openData = {
+            title: 'Open Manadoc project',
+            buttonLabel: 'Open',
+             properties: ['openFile'],
+            filter: [{
+                name: 'Custom File Type',
+                extensions: ['mndc']
+            }]
+        };
+        remote.dialog.showOpenDialog(openData, (entered) => {
+            if (!entered) {
+                return false;
+            }
+            entered = entered[0];
+            
+            if (entered.slice(-5) != '.mndc') {
+                ErrUtility.throwUncriticalError('Incorrect file!');
+            } else {
+                this.openProjectFile(entered);
+            }
+        });
     }
 
     OpenHelp() {
@@ -98,6 +119,26 @@ class MainActions {
             };
             store.dispatch(storeActionTab);
         });
+    }
+
+    openProjectFile(addr) {
+        let project;
+        try {
+            project = fs.readFileSync(addr, 'utf8');
+            project = JSON.parse(project);
+            let storeActionTab = {
+                type: 'tab',
+                act: 'add',
+                detail: {
+                    type: 'project',
+                    addr: addr,
+                    title: project.name
+                }
+            };
+            store.dispatch(storeActionTab);
+        } catch (err) {
+            ErrUtility.throwUncriticalErrorGen(err);
+        }
     }
 }
 

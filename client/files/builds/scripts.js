@@ -28958,23 +28958,24 @@
 	var TabsComponent = function (_React$Component) {
 	    _inherits(TabsComponent, _React$Component);
 
-	    function TabsComponent() {
+	    function TabsComponent(props) {
 	        _classCallCheck(this, TabsComponent);
 
-	        return _possibleConstructorReturn(this, (TabsComponent.__proto__ || Object.getPrototypeOf(TabsComponent)).apply(this, arguments));
+	        var _this = _possibleConstructorReturn(this, (TabsComponent.__proto__ || Object.getPrototypeOf(TabsComponent)).call(this, props));
+
+	        _this.changeTab = _this.changeTab.bind(_this);
+	        return _this;
 	    }
 
 	    _createClass(TabsComponent, [{
 	        key: 'changeTab',
 	        value: function changeTab(num) {
-	            return function () {
-	                var storeAction = {
-	                    type: 'tabs',
-	                    act: 'select',
-	                    num: num
-	                };
-	                _store2.default.dispatch(storeAction);
+	            var storeAction = {
+	                type: 'tab',
+	                act: 'select',
+	                num: num
 	            };
+	            _store2.default.dispatch(storeAction);
 	        }
 	    }, {
 	        key: 'render',
@@ -28988,7 +28989,7 @@
 	            });
 	            return React.createElement(
 	                _reactBootstrap.Nav,
-	                { bsStyle: 'tabs', activeKey: this.props.activeTab },
+	                { bsStyle: 'tabs', activeKey: this.props.activeTab, onSelect: this.changeTab },
 	                tabs
 	            );
 	        }
@@ -48631,7 +48632,7 @@
 	            var projects = this.props.config.projects.map(function (project, index) {
 	                var projectElem = {};
 	                projectElem.name = project.name.length < 13 ? project.name : project.name.slice(0, 13) + '...';
-	                projectElem.addr = project.addr.length < 13 ? project.addr : '...' + project.addr.slice(-13);
+	                projectElem.addr = project.addr.length < 17 ? project.addr : '...' + project.addr.slice(-17);
 	                projectElem.time = (0, _moment2.default)(project.time).fromNow();
 	                return React.createElement(
 	                    _reactBootstrap.Col,
@@ -48641,17 +48642,17 @@
 	                        { className: 'main-project' },
 	                        React.createElement(
 	                            'span',
-	                            { className: 'main-project-text main-project-name' },
+	                            { className: 'main-project-text main-project-name', title: project.name },
 	                            projectElem.name
 	                        ),
 	                        React.createElement(
 	                            'span',
-	                            { className: 'main-project-text main-project-addr' },
+	                            { className: 'main-project-text main-project-addr', title: project.addr },
 	                            projectElem.addr
 	                        ),
 	                        React.createElement(
 	                            'span',
-	                            { className: 'main-project-text main-project-time' },
+	                            { className: 'main-project-text main-project-time', title: (0, _moment2.default)(project.time).format('MMMM Do YYYY, h:mm:ss a') },
 	                            projectElem.time
 	                        ),
 	                        React.createElement(_reactBootstrap.Glyphicon, { className: 'main-project-remove', onClick: _this2.deleteProject(index), glyph: 'remove' }),
@@ -63681,6 +63682,7 @@
 	        this.OpenHelp = this.OpenHelp.bind(this);
 
 	        this.createProjectFile = this.createProjectFile.bind(this);
+	        this.openProjectFile = this.openProjectFile.bind(this);
 	    }
 
 	    _createClass(MainActions, [{
@@ -63689,12 +63691,12 @@
 	            var _this = this;
 
 	            var createData = {
-	                title: 'Create new project',
+	                title: 'Create new Manadoc project',
 	                buttonLabel: 'Create',
-	                filter: {
-	                    name: 'Manadoc project',
+	                filter: [{
+	                    name: 'Custom File Type',
 	                    extensions: ['mndc']
-	                }
+	                }]
 	            };
 	            _electron.remote.dialog.showSaveDialog(createData, function (entered) {
 	                if (!entered) {
@@ -63710,7 +63712,29 @@
 	    }, {
 	        key: 'OpenProject',
 	        value: function OpenProject() {
-	            //
+	            var _this2 = this;
+
+	            var openData = {
+	                title: 'Open Manadoc project',
+	                buttonLabel: 'Open',
+	                properties: ['openFile'],
+	                filter: [{
+	                    name: 'Custom File Type',
+	                    extensions: ['mndc']
+	                }]
+	            };
+	            _electron.remote.dialog.showOpenDialog(openData, function (entered) {
+	                if (!entered) {
+	                    return false;
+	                }
+	                entered = entered[0];
+
+	                if (entered.slice(-5) != '.mndc') {
+	                    _error2.default.throwUncriticalError('Incorrect file!');
+	                } else {
+	                    _this2.openProjectFile(entered);
+	                }
+	            });
 	        }
 	    }, {
 	        key: 'OpenHelp',
@@ -63774,6 +63798,27 @@
 	                };
 	                _store2.default.dispatch(storeActionTab);
 	            });
+	        }
+	    }, {
+	        key: 'openProjectFile',
+	        value: function openProjectFile(addr) {
+	            var project = void 0;
+	            try {
+	                project = _fs2.default.readFileSync(addr, 'utf8');
+	                project = JSON.parse(project);
+	                var storeActionTab = {
+	                    type: 'tab',
+	                    act: 'add',
+	                    detail: {
+	                        type: 'project',
+	                        addr: addr,
+	                        title: project.name
+	                    }
+	                };
+	                _store2.default.dispatch(storeActionTab);
+	            } catch (err) {
+	                _error2.default.throwUncriticalErrorGen(err);
+	            }
 	        }
 	    }]);
 
