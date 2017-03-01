@@ -18,6 +18,16 @@ class ErrorUtility {
         app.exit(1);
     }
 
+    throwTabError(text) {
+        var windowOprtions = {
+            type: 'error',
+            buttons: ['OK'],
+            message: text
+        };
+        dialog.showMessageBox(windowOprtions);
+        // TODO - закрытие вкладки
+    }
+
     throwUncriticalErrorGen(err) {
         var windowOprtions = {
             type: 'error',
@@ -37,7 +47,6 @@ class ErrorUtility {
     }
 
     generateText(err) {
-        console.log(app);
         switch (err.code) {
             case 'ENOENT':
                 return 'File not found: ' + err.path;

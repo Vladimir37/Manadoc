@@ -1,7 +1,9 @@
 import * as React from 'react';
 import {connect} from 'react-redux';
 import {Jumbotron} from 'react-bootstrap';
+
 import MainPage from './pages/main.jsx';
+import ProjectPage from './pages/project.jsx';
 
 class TabsContentComponent extends React.Component {
     constructor(props) {
@@ -25,6 +27,8 @@ class TabsContentComponent extends React.Component {
                 case 'main':
                     tabContent = <MainPage/>;
                     break;
+                case 'project':
+                    tabContent = <ProjectPage/>;
                 default:
                     break;
             }

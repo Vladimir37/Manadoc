@@ -28664,6 +28664,17 @@
 	            app.exit(1);
 	        }
 	    }, {
+	        key: 'throwTabError',
+	        value: function throwTabError(text) {
+	            var windowOprtions = {
+	                type: 'error',
+	                buttons: ['OK'],
+	                message: text
+	            };
+	            dialog.showMessageBox(windowOprtions);
+	            // TODO - закрытие вкладки
+	        }
+	    }, {
 	        key: 'throwUncriticalErrorGen',
 	        value: function throwUncriticalErrorGen(err) {
 	            var windowOprtions = {
@@ -28686,7 +28697,6 @@
 	    }, {
 	        key: 'generateText',
 	        value: function generateText(err) {
-	            console.log(app);
 	            switch (err.code) {
 	                case 'ENOENT':
 	                    return 'File not found: ' + err.path;
@@ -48475,6 +48485,10 @@
 
 	var _main2 = _interopRequireDefault(_main);
 
+	var _project = __webpack_require__(662);
+
+	var _project2 = _interopRequireDefault(_project);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
@@ -48516,6 +48530,8 @@
 	                    case 'main':
 	                        tabContent = React.createElement(_main2.default, null);
 	                        break;
+	                    case 'project':
+	                        tabContent = React.createElement(_project2.default, null);
 	                    default:
 	                        break;
 	                }
@@ -48585,10 +48601,6 @@
 	var _main = __webpack_require__(657);
 
 	var _main2 = _interopRequireDefault(_main);
-
-	var _config = __webpack_require__(269);
-
-	var _config2 = _interopRequireDefault(_config);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -64162,6 +64174,143 @@
 	  return typeof obj.readFloatLE === 'function' && typeof obj.slice === 'function' && isBuffer(obj.slice(0, 0))
 	}
 
+
+/***/ },
+/* 662 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var React = _interopRequireWildcard(_react);
+
+	var _reactRedux = __webpack_require__(177);
+
+	var _reactBootstrap = __webpack_require__(278);
+
+	var _store = __webpack_require__(268);
+
+	var _store2 = _interopRequireDefault(_store);
+
+	var _main = __webpack_require__(657);
+
+	var _main2 = _interopRequireDefault(_main);
+
+	var _projects = __webpack_require__(663);
+
+	var _projects2 = _interopRequireDefault(_projects);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var ProjectPageComponent = function (_React$Component) {
+	    _inherits(ProjectPageComponent, _React$Component);
+
+	    function ProjectPageComponent(props) {
+	        _classCallCheck(this, ProjectPageComponent);
+
+	        return _possibleConstructorReturn(this, (ProjectPageComponent.__proto__ || Object.getPrototypeOf(ProjectPageComponent)).call(this, props));
+	    }
+
+	    _createClass(ProjectPageComponent, [{
+	        key: 'render',
+	        value: function render() {
+	            console.log(_projects2.default);
+	            var projectAddr = this.props.tabs[this.props.activeTab - 1].addr;
+	            var projectSheets = _projects2.default.ReadProject(projectAddr).lists;
+	            var sheets = projectSheets.map(function (sheet, index) {
+	                return React.createElement(
+	                    _reactBootstrap.ListGroupItem,
+	                    { key: index },
+	                    sheet.name
+	                );
+	            });
+	            return React.createElement(
+	                _reactBootstrap.ListGroup,
+	                null,
+	                sheets
+	            );
+	        }
+	    }]);
+
+	    return ProjectPageComponent;
+	}(React.Component);
+
+	function ConnectProjectPage(state) {
+	    return {
+	        config: state.config,
+	        tabs: state.tabs.tabsList,
+	        activeTab: state.tabs.activeTab
+	    };
+	}
+
+	exports.default = (0, _reactRedux.connect)(ConnectProjectPage)(ProjectPageComponent);
+
+/***/ },
+/* 663 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _fs = __webpack_require__(272);
+
+	var _fs2 = _interopRequireDefault(_fs);
+
+	var _error = __webpack_require__(270);
+
+	var _error2 = _interopRequireDefault(_error);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var ProjectsUtility = function () {
+	    function ProjectsUtility() {
+	        _classCallCheck(this, ProjectsUtility);
+
+	        this.ReadProject = this.ReadProject.bind(this);
+	    }
+
+	    _createClass(ProjectsUtility, [{
+	        key: 'ReadProject',
+	        value: function ReadProject(addr) {
+	            var project = void 0;
+	            try {
+	                project = _fs2.default.readFileSync(addr, 'utf8');
+	                project = JSON.parse(project);
+	                return project;
+	            } catch (err) {
+	                _error2.default.throwUncriticalErrorGen(err);
+	            }
+	        }
+	    }]);
+
+	    return ProjectsUtility;
+	}();
+
+	var ProjectsUtilityApp = new ProjectsUtility();
+
+	exports.default = ProjectsUtilityApp;
 
 /***/ }
 /******/ ]);

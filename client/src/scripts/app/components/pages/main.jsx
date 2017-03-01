@@ -5,7 +5,6 @@ import moment from 'moment';
 
 import store from '../../store/store.jsx';
 import MainActions from '../../utility/actions/main.jsx';
-import Config from '../../utility/config.jsx';
 
 class MainPageComponent extends React.Component {
     constructor(props) {
