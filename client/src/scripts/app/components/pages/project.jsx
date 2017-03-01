@@ -9,6 +9,23 @@ import ProjectsUtility from '../../utility/projects.jsx';
 class ProjectPageComponent extends React.Component {
     constructor(props) {
         super(props);
+
+        this.openSheet = this.openSheet.bind(this);
+    }
+
+    openSheet(index, name) {
+        return () => {
+            let storeActionTab = {
+                type: 'tab',
+                act: 'add',
+                detail: {
+                    type: 'sheet',
+                    addr: this.props.tabs[this.props.activeTab - 1].addr,
+                    title: name
+                }
+            };
+            store.dispatch(storeActionTab);
+        }
     }
 
     render() {
@@ -19,7 +36,7 @@ class ProjectPageComponent extends React.Component {
         let projectAddr = project.addr;
         let projectSheets = ProjectsUtility.ReadProject(projectAddr).lists;
         let sheets = projectSheets.map((sheet, index) => {
-            return <ListGroupItem key={index}>{sheet.name}</ListGroupItem>;
+            return <ListGroupItem key={index} onClick={this.openSheet(index, sheet.name)}>{sheet.name}</ListGroupItem>;
         });
         return <ListGroup>
             {sheets}

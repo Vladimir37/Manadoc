@@ -48489,6 +48489,10 @@
 
 	var _project2 = _interopRequireDefault(_project);
 
+	var _sheet = __webpack_require__(664);
+
+	var _sheet2 = _interopRequireDefault(_sheet);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
@@ -48532,6 +48536,10 @@
 	                        break;
 	                    case 'project':
 	                        tabContent = React.createElement(_project2.default, null);
+	                        break;
+	                    case 'sheet':
+	                        tabContent = React.createElement(_sheet2.default, null);
+	                        break;
 	                    default:
 	                        break;
 	                }
@@ -48620,20 +48628,29 @@
 
 	        var _this = _possibleConstructorReturn(this, (MainPageComponent.__proto__ || Object.getPrototypeOf(MainPageComponent)).call(this, props));
 
+	        _this.openProject = _this.openProject.bind(_this);
 	        _this.deleteProject = _this.deleteProject.bind(_this);
 	        return _this;
 	    }
 
 	    _createClass(MainPageComponent, [{
+	        key: 'openProject',
+	        value: function openProject(addr) {
+	            return function () {
+	                _main2.default.openProjectFile(addr);
+	            };
+	        }
+	    }, {
 	        key: 'deleteProject',
 	        value: function deleteProject(num) {
-	            return function () {
+	            return function (e) {
 	                var storeAction = {
 	                    type: 'config',
 	                    act: 'delete_project',
 	                    num: num
 	                };
 	                _store2.default.dispatch(storeAction);
+	                e.stopPropagation();
 	            };
 	        }
 	    }, {
@@ -48655,7 +48672,7 @@
 	                    { sm: 3, md: 3, key: index },
 	                    React.createElement(
 	                        'article',
-	                        { className: 'main-project' },
+	                        { className: 'main-project', onClick: _this2.openProject(project.addr) },
 	                        React.createElement(
 	                            'span',
 	                            { className: 'main-project-text main-project-name', title: project.name },
@@ -64227,12 +64244,35 @@
 	    function ProjectPageComponent(props) {
 	        _classCallCheck(this, ProjectPageComponent);
 
-	        return _possibleConstructorReturn(this, (ProjectPageComponent.__proto__ || Object.getPrototypeOf(ProjectPageComponent)).call(this, props));
+	        var _this = _possibleConstructorReturn(this, (ProjectPageComponent.__proto__ || Object.getPrototypeOf(ProjectPageComponent)).call(this, props));
+
+	        _this.openSheet = _this.openSheet.bind(_this);
+	        return _this;
 	    }
 
 	    _createClass(ProjectPageComponent, [{
+	        key: 'openSheet',
+	        value: function openSheet(index, name) {
+	            var _this2 = this;
+
+	            return function () {
+	                var storeActionTab = {
+	                    type: 'tab',
+	                    act: 'add',
+	                    detail: {
+	                        type: 'sheet',
+	                        addr: _this2.props.tabs[_this2.props.activeTab - 1].addr,
+	                        title: name
+	                    }
+	                };
+	                _store2.default.dispatch(storeActionTab);
+	            };
+	        }
+	    }, {
 	        key: 'render',
 	        value: function render() {
+	            var _this3 = this;
+
 	            var project = this.props.tabs[this.props.activeTab - 1];
 	            if (project.type != 'project') {
 	                return null;
@@ -64242,7 +64282,7 @@
 	            var sheets = projectSheets.map(function (sheet, index) {
 	                return React.createElement(
 	                    _reactBootstrap.ListGroupItem,
-	                    { key: index },
+	                    { key: index, onClick: _this3.openSheet(index, sheet.name) },
 	                    sheet.name
 	                );
 	            });
@@ -64318,6 +64358,82 @@
 	var ProjectsUtilityApp = new ProjectsUtility();
 
 	exports.default = ProjectsUtilityApp;
+
+/***/ },
+/* 664 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var React = _interopRequireWildcard(_react);
+
+	var _reactRedux = __webpack_require__(177);
+
+	var _reactBootstrap = __webpack_require__(278);
+
+	var _store = __webpack_require__(268);
+
+	var _store2 = _interopRequireDefault(_store);
+
+	var _main = __webpack_require__(657);
+
+	var _main2 = _interopRequireDefault(_main);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var SheetPageComponent = function (_React$Component) {
+	    _inherits(SheetPageComponent, _React$Component);
+
+	    function SheetPageComponent(props) {
+	        _classCallCheck(this, SheetPageComponent);
+
+	        return _possibleConstructorReturn(this, (SheetPageComponent.__proto__ || Object.getPrototypeOf(SheetPageComponent)).call(this, props));
+	    }
+
+	    _createClass(SheetPageComponent, [{
+	        key: 'render',
+	        value: function render() {
+	            var project = this.props.tabs[this.props.activeTab - 1];
+	            if (project.type != 'sheet') {
+	                return null;
+	            }
+
+	            return React.createElement(
+	                'h2',
+	                null,
+	                project.title
+	            );
+	        }
+	    }]);
+
+	    return SheetPageComponent;
+	}(React.Component);
+
+	function ConnectSheetPage(state) {
+	    return {
+	        config: state.config,
+	        tabs: state.tabs.tabsList,
+	        activeTab: state.tabs.activeTab
+	    };
+	}
+
+	exports.default = (0, _reactRedux.connect)(ConnectSheetPage)(SheetPageComponent);
 
 /***/ }
 /******/ ]);

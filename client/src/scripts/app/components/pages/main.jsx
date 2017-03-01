@@ -10,17 +10,25 @@ class MainPageComponent extends React.Component {
     constructor(props) {
         super(props);
 
+        this.openProject = this.openProject.bind(this);
         this.deleteProject = this.deleteProject.bind(this);
     }
 
-    deleteProject(num) {
+    openProject(addr) {
         return () => {
+            MainActions.openProjectFile(addr);
+        }
+    }
+
+    deleteProject(num) {
+        return (e) => {
             let storeAction = {
                 type: 'config',
                 act: 'delete_project',
                 num: num
             };
             store.dispatch(storeAction);
+            e.stopPropagation();
         }
     }
 
@@ -35,7 +43,7 @@ class MainPageComponent extends React.Component {
             projectElem.addr = project.addr.length < 17 ? project.addr : '...' + project.addr.slice(-17);
             projectElem.time = moment(project.time).fromNow();
             return (<Col sm={3} md={3} key={index}>
-                <article className="main-project">
+                <article className="main-project" onClick={this.openProject(project.addr)}>
                     <span className="main-project-text main-project-name" title={project.name}>
                         {projectElem.name}
                     </span>

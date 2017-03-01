@@ -4,6 +4,7 @@ import {Jumbotron} from 'react-bootstrap';
 
 import MainPage from './pages/main.jsx';
 import ProjectPage from './pages/project.jsx';
+import SheetPage from './pages/sheet.jsx';
 
 class TabsContentComponent extends React.Component {
     constructor(props) {
@@ -29,6 +30,10 @@ class TabsContentComponent extends React.Component {
                     break;
                 case 'project':
                     tabContent = <ProjectPage/>;
+                    break;
+                case 'sheet':
+                    tabContent = <SheetPage/>;
+                    break;
                 default:
                     break;
             }
