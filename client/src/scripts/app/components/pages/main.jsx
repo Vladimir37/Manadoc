@@ -25,6 +25,10 @@ class MainPageComponent extends React.Component {
     }
 
     render() {
+        let project = this.props.tabs[this.props.activeTab - 1];
+        if (project.type != 'main') {
+            return null;
+        }
         let projects = this.props.config.projects.map((project, index) => {
             var projectElem = {};
             projectElem.name = project.name.length < 13 ? project.name : project.name.slice(0, 13) + '...';

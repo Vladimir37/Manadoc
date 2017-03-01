@@ -12,7 +12,11 @@ class ProjectPageComponent extends React.Component {
     }
 
     render() {
-        let projectAddr = this.props.tabs[this.props.activeTab - 1].addr;
+        let project = this.props.tabs[this.props.activeTab - 1];
+        if (project.type != 'project') {
+            return null;
+        }
+        let projectAddr = project.addr;
         let projectSheets = ProjectsUtility.ReadProject(projectAddr).lists;
         let sheets = projectSheets.map((sheet, index) => {
             return <ListGroupItem key={index}>{sheet.name}</ListGroupItem>;

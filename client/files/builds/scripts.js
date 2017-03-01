@@ -48641,6 +48641,10 @@
 	        value: function render() {
 	            var _this2 = this;
 
+	            var project = this.props.tabs[this.props.activeTab - 1];
+	            if (project.type != 'main') {
+	                return null;
+	            }
 	            var projects = this.props.config.projects.map(function (project, index) {
 	                var projectElem = {};
 	                projectElem.name = project.name.length < 13 ? project.name : project.name.slice(0, 13) + '...';
@@ -64229,8 +64233,11 @@
 	    _createClass(ProjectPageComponent, [{
 	        key: 'render',
 	        value: function render() {
-	            console.log(_projects2.default);
-	            var projectAddr = this.props.tabs[this.props.activeTab - 1].addr;
+	            var project = this.props.tabs[this.props.activeTab - 1];
+	            if (project.type != 'project') {
+	                return null;
+	            }
+	            var projectAddr = project.addr;
 	            var projectSheets = _projects2.default.ReadProject(projectAddr).lists;
 	            var sheets = projectSheets.map(function (sheet, index) {
 	                return React.createElement(
