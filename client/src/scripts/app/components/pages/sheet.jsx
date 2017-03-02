@@ -22,7 +22,7 @@ class SheetPageComponent extends React.Component {
 
 function ConnectSheetPage(state) {
     return {
-        config: state.config,
+        projects: state.projects,
         tabs: state.tabs.tabsList,
         activeTab: state.tabs.activeTab
     };

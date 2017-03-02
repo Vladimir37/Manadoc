@@ -107,6 +107,13 @@ class MainActions {
                 addr: addr
             };
             store.dispatch(storeActionHistory);
+            // Add to store
+            let storeActionRead = {
+                type: 'projects',
+                act: 'add',
+                addr: addr
+            };
+            store.dispatch(storeActionRead);
             // Create new tab
             let storeActionTab = {
                 type: 'tab',
@@ -126,6 +133,14 @@ class MainActions {
         try {
             project = fs.readFileSync(addr, 'utf8');
             project = JSON.parse(project);
+            // Add to store
+            let storeActionRead = {
+                type: 'projects',
+                act: 'add',
+                addr: addr
+            };
+            store.dispatch(storeActionRead);
+            // Open tab
             let storeActionTab = {
                 type: 'tab',
                 act: 'add',
