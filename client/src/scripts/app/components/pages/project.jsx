@@ -99,7 +99,16 @@ class ProjectPageComponent extends React.Component {
     }
 
     createSheet() {
-        console.log(this.state.addedName);
+        if (!this.state.addedName) {
+            return false;
+        }
+        let storeAddSheetAction = {
+            type: 'edit',
+            act: 'add_sheet',
+            addr: this.props.tabs[this.props.activeTab - 1].addr,
+            name: this.state.addedName
+        };
+        store.dispatch(storeAddSheetAction);
     }
 }
 

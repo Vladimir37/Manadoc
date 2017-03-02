@@ -21,6 +21,7 @@ class ProjectsUtility {
 
     WriteProject(addr, project) {
         try {
+            project = JSON.stringify(project);
             fs.writeFileSync(addr, project);
         } catch (err) {
             ErrUtility.throwUncriticalErrorGen(err);

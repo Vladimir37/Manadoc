@@ -4,6 +4,7 @@ import ConfigUtility from '../utility/config.jsx';
 
 import configReducer from './reducers/config.jsx';
 import projectsReducer from './reducers/projects.jsx';
+import editReducer from './reducers/edit.jsx';
 import tabReducer from './reducers/tabs.jsx';
 
 let mainTab = {
@@ -31,6 +32,8 @@ function mainReducer(state = initialState, action) {
             return configReducer(state, action);
         case 'projects':
             return projectsReducer(state, action);
+        case 'edit':
+            return editReducer(state, action);
         default:
             return state;
     }
